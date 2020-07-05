@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
 import java.util.List;
@@ -20,9 +21,6 @@ public class PaymentHubController {
 
     @Autowired
     private PaymentHubProcessingService paymentHubProcessingService;
-
-    @Autowired
-    private MessageHandler messageHandler;
 
     @Autowired
     private PaymentHubRequestValidator paymentHubRequestValidator;
@@ -43,7 +41,7 @@ public class PaymentHubController {
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     @ResponseStatus(HttpStatus.CREATED)
-    public Payment createPayment(@RequestBody Payment payment) {
+    public Payment createPayment(@Valid @RequestBody Payment payment) {
         paymentHubRequestValidator.validate(payment);
         return paymentHubProcessingService.createPayment(payment);
     }
@@ -52,7 +50,7 @@ public class PaymentHubController {
         produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
-    public Payment updatePayment(@RequestBody Payment payment ) {
+    public Payment updatePayment(@Valid @RequestBody Payment payment ) {
 
         return paymentHubProcessingService.updatePayment(payment);
     }
@@ -62,7 +60,7 @@ public class PaymentHubController {
         consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Payment deletePayment(@RequestBody Payment payment) {
+    public Payment deletePayment(@Valid @RequestBody Payment payment) {
         return paymentHubProcessingService.deletePayment(payment);
     }
 

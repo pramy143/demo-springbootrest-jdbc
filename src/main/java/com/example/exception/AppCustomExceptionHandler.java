@@ -36,11 +36,6 @@ public class AppCustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    /*@ExceptionHandler(ConstraintViolationException.class)
-    public void constraintViolationException(HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.BAD_REQUEST.value());
-    }*/
-
     @ExceptionHandler(value = {NullPointerException.class, AppTechnicalException.class})
     public ResponseEntity<Object> handleCustomTException(NullPointerException ex, WebRequest request) {
         String errorMessageDescription = ex.getLocalizedMessage() == null ? ex.toString() : ex.getLocalizedMessage();

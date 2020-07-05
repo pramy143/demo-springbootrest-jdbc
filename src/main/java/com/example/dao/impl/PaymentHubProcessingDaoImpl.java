@@ -4,6 +4,8 @@ import com.example.dao.PaymentHubProcessingDao;
 import com.example.dao.mapper.PaymentRowMapper;
 import com.example.model.Payment;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
@@ -23,26 +25,7 @@ import java.util.Map;
 @Repository
 public class PaymentHubProcessingDaoImpl extends NamedParameterJdbcDaoSupport implements PaymentHubProcessingDao {
 
-    @Value("${payment.select.query}")
-    private String selectQuery;
-
-    @Value("${payment.select.byid.query}")
-    private String selectByIdQuery;
-
-    @Value("${payment.insert.query}")
-    private String insertQuery;
-
-    @Value("${payment.update.query}")
-    private String updateQuery;
-
-    @Value("${payment.softdelete.query}")
-    private String deleteQuery;
-
-
     private NamedParameterJdbcTemplate jdbcTemplate;
-
-    public PaymentHubProcessingDaoImpl() {
-    }
 
     public PaymentHubProcessingDaoImpl(DataSource dataSource) {
         setDataSource(dataSource);
@@ -51,12 +34,14 @@ public class PaymentHubProcessingDaoImpl extends NamedParameterJdbcDaoSupport im
 
     @Override
     public List<Payment> fetchAllPayments() {
+        String selectQuery = "SELECT * from payments";
         List<Payment> list = jdbcTemplate.query(selectQuery, new PaymentRowMapper());
 
         return list;
     }
 
     public Payment fetchPaymentById(final Long paymentId) {
+        final String selectByIdQuery= "SELECT * from payments where paymentId = :paymentId";
         Map<String, Object> params = new HashMap<>();
         params.put("paymentId", paymentId);
 
@@ -64,6 +49,8 @@ public class PaymentHubProcessingDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     public Payment createPayment(final Payment payment) {
+        final String insertQuery= "INSERT INTO payments(description, paymentType, paymentStatus, createdDate) " +
+                                  "VALUES (:description, :paymentType, :paymentStatus, :createdDate)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(insertQuery, createSqlParameterSourceForInsert(payment), keyHolder);
 
@@ -71,34 +58,45 @@ public class PaymentHubProcessingDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     public Payment updatePaymentById(final Payment payment) {
+        final String updateQuery= "UPDATE PAYMENTS SET paymentType = :paymentType, " +
+                                  "paymentStatus = :paymentStatus, " +
+                                  "description = :description, " +
+                                  "createdDate = :createdDate " +
+                                  "WHERE " +
+                                  "paymentId = :paymentId";
+
         jdbcTemplate.update(updateQuery, createSqlParameterSourceForUpdate(payment));
 
         return fetchPaymentById(payment.getPaymentId());
     }
 
     public Payment deletePaymentById(final Payment payment) {
+        final String deleteQuery= "UPDATE PAYMENTS " +
+                                  "SET paymentStatus = :paymentStatus " +
+                                  "WHERE " +
+                                  "paymentId = :paymentId";
         jdbcTemplate.update(deleteQuery, createSqlParameterSourceForDelete(payment));
 
         return fetchPaymentById(payment.getPaymentId());
     }
 
     private SqlParameterSource createSqlParameterSourceForInsert(final Payment payment) {
-        return new MapSqlParameterSource("paymentStatus", payment.getPaymentStatus().name())
-            .addValue("paymentType", payment.getPaymentType().name())
+        return new MapSqlParameterSource("paymentStatus", payment.getPaymentStatus())
+            .addValue("paymentType", payment.getPaymentType())
             .addValue("description", payment.getDescription())
             .addValue("createdDate", new Date());
     }
 
     private SqlParameterSource createSqlParameterSourceForUpdate(final Payment payment) {
-        return new MapSqlParameterSource("paymentStatus", payment.getPaymentStatus().name())
-            .addValue("paymentType", payment.getPaymentType().name())
+        return new MapSqlParameterSource("paymentStatus", payment.getPaymentStatus())
+            .addValue("paymentType", payment.getPaymentType())
             .addValue("description", payment.getDescription())
-            .addValue("createdDate", new Date())
+            .addValue("createdDate", payment.getCreatedDate())
             .addValue("paymentId", payment.getPaymentId());
     }
 
     private SqlParameterSource createSqlParameterSourceForDelete(final Payment payment) {
-        return new MapSqlParameterSource("paymentStatus", payment.getPaymentStatus().name())
+        return new MapSqlParameterSource("paymentStatus", payment.getPaymentStatus())
             .addValue("paymentId", payment.getPaymentId());
     }
 

@@ -9,20 +9,14 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>demo-springbootrest-jdbc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>demo</name>
+    <name>demo-springbootrest-jdbc</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
         <java.version>11</java.version>
-        <jooq.version>3.13.2</jooq.version>
-        <cxf.version>3.3.2</cxf.version>
-        <jaxb2.basics.version>0.12.0</jaxb2.basics.version>
-        <jaxb2.basics.runtime.version>0.12.0
-        </jaxb2.basics.runtime.version> <!-- see: http://repo1.maven.org/maven2/org/jvnet/jaxb2_commons/jaxb2-basics-runtime/1.11.1-PUBLISHED-BY-MISTAKE/ -->
-        <jaxb2.basics.annotate.version>1.0.1</jaxb2.basics.annotate.version>
     </properties>
 
     <dependencies>
@@ -47,6 +41,22 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jetty</artifactId>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.dbunit/dbunit -->
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.4.9</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
+        </dependency>
+
 
         <!-- Spring boot jdbc dependency -->
         <dependency>
@@ -79,11 +89,6 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.191</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
@@ -130,6 +135,19 @@
             <artifactId>persistence-api</artifactId>
             <version>1.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.4.9</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.camel/camel-beanio-starter -->
+        <!--<dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-beanio-starter</artifactId>
+            <version>3.0.0-M4</version>
+        </dependency>-->
 
 
     </dependencies>

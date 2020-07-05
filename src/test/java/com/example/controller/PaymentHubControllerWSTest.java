@@ -59,8 +59,9 @@ public class PaymentHubControllerWSTest {
     public void setUp() {
         payment = new Payment.Builder()
             .paymentId(1L)
-            .paymentType(PaymentType.SEPA)
-            .paymentStatus(PaymentStatus.COMPLETED)
+            .paymentType("SEPA")
+            .paymentStatus("COMPLETED")
+            .description("PaymentStatus.COMPLETED")
             .build();
 
     }
@@ -111,15 +112,35 @@ public class PaymentHubControllerWSTest {
             .perform(
                 MockMvcRequestBuilders
                     .post("/payments-hub")
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON_UTF8)
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                     .content(objectMapper.writeValueAsString(payment))
             )
+            .andDo(print())
             .andExpect(status().isCreated())
             .andExpect(MockMvcResultMatchers.jsonPath("$.paymentId", is(Integer.parseInt(payment.getPaymentId().toString()))))
             .andExpect(MockMvcResultMatchers.jsonPath("$.paymentType", is(payment.getPaymentType().toString())));
-        ;
     }
+
+    @Test
+    @DisplayName("Test POST Mapping Bad Request: createPayment")
+    void testFetchPaymentsReturns400() throws Exception {
+
+        given(paymentHubProcessingService.createPayment(any(Payment.class))).willAnswer((invocation) -> invocation.getArgument(0));
+        payment.setDescription(null);
+
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .post("/payments-hub")
+                    .accept(MediaType.APPLICATION_JSON_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    .content(objectMapper.writeValueAsString(payment))
+            )
+            .andDo(print())
+            .andExpect(status().isBadRequest());
+    }
+
     @Test
     @DisplayName("Test for PUT Mapping success: ")
     void testUpdatePayment() throws Exception {

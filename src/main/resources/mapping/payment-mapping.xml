@@ -1,0 +1,15 @@
+<beanio xmlns="http://www.beanio.org/2012/03"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.beanio.org/2012/03 http://www.beanio.org/2012/03/mapping.xsd">
+    <stream name="employeeStream" format="csv" >
+        <group name="payments" class="com.example.model.Payments" minOccurs="0" maxOccurs="unbounded">
+            <record name="payment"  class="com.example.model.Payment" collection="list"  minOccurs="1" maxOccurs="unbounded">
+                <field name="paymentId"/>
+                <field name="paymentType" />
+                <field name="paymentStatus" />
+                <field name="description"/>
+                <field name="createdDate" format="MMddyyyy"  />
+            </record>
+        </group>
+    </stream>
+</beanio>

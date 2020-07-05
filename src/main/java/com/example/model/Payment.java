@@ -12,10 +12,10 @@ public class Payment {
     private Long paymentId;
 
     @NotNull(message = "Payment type is missing.")
-    private PaymentType paymentType;
+    private String paymentType;
 
     @NotNull(message = "Payment Status is missing.")
-    private PaymentStatus paymentStatus;
+    private String paymentStatus;
 
     @NotNull(message = "Description can not be null")
     private String description;
@@ -42,19 +42,19 @@ public class Payment {
         this.paymentId = paymentId;
     }
 
-    public PaymentType getPaymentType() {
+    public String getPaymentType() {
         return paymentType;
     }
 
-    public void setPaymentType(final PaymentType paymentType) {
+    public void setPaymentType(final String paymentType) {
         this.paymentType = paymentType;
     }
 
-    public PaymentStatus getPaymentStatus() {
+    public String getPaymentStatus() {
         return paymentStatus;
     }
 
-    public void setPaymentStatus(final PaymentStatus paymentStatus) {
+    public void setPaymentStatus(final String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 
@@ -77,8 +77,8 @@ public class Payment {
     public static final class Builder {
         private Long paymentId;
         private String description;
-        private PaymentType paymentType;
-        private PaymentStatus paymentStatus;
+        private String paymentType;
+        private String paymentStatus;
 
         public Builder paymentId(Long paymentId) {
             this.paymentId = paymentId;
@@ -90,12 +90,12 @@ public class Payment {
             return this;
         }
 
-        public Builder paymentType(PaymentType paymentType) {
+        public Builder paymentType(String paymentType) {
             this.paymentType = paymentType;
             return this;
         }
 
-        public Builder paymentStatus(PaymentStatus paymentStatus) {
+        public Builder paymentStatus(String paymentStatus) {
             this.paymentStatus = paymentStatus;
             return this;
         }
