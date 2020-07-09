@@ -1,15 +1,32 @@
 <beanio xmlns="http://www.beanio.org/2012/03"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.beanio.org/2012/03 http://www.beanio.org/2012/03/mapping.xsd">
-    <stream name="employeeStream" format="csv" >
+    <stream name="paymentStream" format="csv" >
+        <!-- 'class' binds the header record to a java.util.HashMap -->
+        <record name="header" class="map">
+            <!-- 'rid' indicates this field is used to identify the record -->
+            <field name="recordType" rid="true" literal="H" />
+            <!-- 'format' can be used to provide Date and Number formats -->
+            <field name="fileDate" type="java.util.Date" format="yyyy-MM-dd" />
+        </record>
         <group name="payments" class="com.example.model.Payments" minOccurs="0" maxOccurs="unbounded">
-            <record name="payment"  class="com.example.model.Payment" collection="list"  minOccurs="1" maxOccurs="unbounded">
+            <record name="payment"  class="com.example.model.Payment" collection="list" >
+                <!-- 'ignore' indicates this field is not bound to a bean property -->
+                <field name="recordType" rid="true" literal="D" ignore="true" />
                 <field name="paymentId"/>
                 <field name="paymentType" />
                 <field name="paymentStatus" />
                 <field name="description"/>
-                <field name="createdDate" format="MMddyyyy"  />
+                <field name="createdDate" type="java.util.Date" format="MMddyyyy" minOccurs="0" />
             </record>
         </group>
+
+        <!-- 'target' binds the trailer record to the Integer record count field -->
+        <record name="trailer" target="recordCount">
+            <!-- 'literal' is used to define constant values -->
+            <field name="recordType" rid="true" literal="T" />
+            <!-- 'type' can be declared where bean introspection is not possible -->
+            <field name="recordCount" type="int" />
+        </record>
     </stream>
 </beanio>

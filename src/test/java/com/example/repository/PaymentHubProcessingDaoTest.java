@@ -6,12 +6,9 @@ import com.example.model.Payment;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.mockito.InjectMocks;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,7 +16,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import javax.sql.DataSource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

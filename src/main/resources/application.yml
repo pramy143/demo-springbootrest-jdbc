@@ -1,0 +1,32 @@
+org:
+  dbunit:
+    database:
+      IMetadataHandler:
+        implClassName: org.dbunit.ext.mysql.MySqlMetadataHandler
+
+spring:
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    pool:
+      enabled: true
+      max-connections: 10
+max:
+  concurrent:
+    consumers: 2
+input:
+  queue: "jms:INBOUND.D"
+output:
+  queue: "jms:OUTBOUND.D"
+
+management:
+  endpoint:
+    info:
+      enabled: true
+    web:
+      exposure:
+        include: "*"
+    jmx:
+      exposure:
+        include: health,info

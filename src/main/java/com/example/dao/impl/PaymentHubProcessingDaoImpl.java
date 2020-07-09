@@ -14,6 +14,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 
@@ -22,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+@Transactional
 public class PaymentHubProcessingDaoImpl extends NamedParameterJdbcDaoSupport implements PaymentHubProcessingDao {
 
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -33,6 +36,7 @@ public class PaymentHubProcessingDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Payment> fetchAllPayments() {
         String selectQuery = "SELECT * from payments";
         List<Payment> list = jdbcTemplate.query(selectQuery, new PaymentRowMapper());
@@ -40,6 +44,8 @@ public class PaymentHubProcessingDaoImpl extends NamedParameterJdbcDaoSupport im
         return list;
     }
 
+    @Override
+    @Transactional
     public Payment fetchPaymentById(final Long paymentId) {
         final String selectByIdQuery= "SELECT * from payments where paymentId = :paymentId";
         Map<String, Object> params = new HashMap<>();
@@ -49,8 +55,17 @@ public class PaymentHubProcessingDaoImpl extends NamedParameterJdbcDaoSupport im
     }
 
     public Payment createPayment(final Payment payment) {
-        final String insertQuery= "INSERT INTO payments(description, paymentType, paymentStatus, createdDate) " +
-                                  "VALUES (:description, :paymentType, :paymentStatus, :createdDate)";
+        final String insertQuery= "INSERT INTO " +
+                                          "payments(" +
+                                          "description, " +
+                                          "paymentType, " +
+                                          "paymentStatus, " +
+                                          "createdDate) " +
+                                  "VALUES (:description, " +
+                                          ":paymentType, " +
+                                          ":paymentStatus, " +
+                                          ":createdDate" +
+                                          ")";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(insertQuery, createSqlParameterSourceForInsert(payment), keyHolder);
 
